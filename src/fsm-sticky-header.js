@@ -8,10 +8,12 @@
             restrict: 'EA',
             replace: false,
             scope: { 
-                scrollBody: '=',
-                scrollStop: '=',
-                scrollableContainer: '=',
-                contentOffset: '='
+                scrollBody          : '=',
+                scrollStop          : '=',
+                scrollableContainer : '=',
+                contentOffset       : '=',
+                fullHeight          : '=',
+                fullWidth           : '='
             },
             link: function(scope, element, attributes, control){
                 var header = $(element, this);
@@ -39,15 +41,19 @@
                     var contentTop = content.offset().top + contentOffset;
                     var contentBottom = contentTop + content.outerHeight(false);
 
-                    if ( (scrollTop > contentTop) && (scrollTop < contentBottom) ) {
+                    if ( (scrollTop > contentTop) && ((scrollTop < contentBottom) || scope.fullHeight) ) {
                         if (!clonedHeader){
                             createClone();    
                             clonedHeader.css({ "visibility": "visible"});
                         }
                         
                         if ( scrollTop < contentBottom && scrollTop > contentBottom - clonedHeader.outerHeight(false) ){
-                            var top = contentBottom - scrollTop + scope.scrollStop - clonedHeader.outerHeight(false);
-                            clonedHeader.css('top', top + 'px');
+                            if(scope.fullHeight){
+                                clonedHeader.css('top', scope.scrollStop + 'px');
+                            }else{
+                                var top = contentBottom - scrollTop + scope.scrollStop - clonedHeader.outerHeight(false);
+                                clonedHeader.css('top', top + 'px');
+                            }
                         } else {
                             calculateSize();
                         }
@@ -74,10 +80,15 @@
                 };
         
                 function calculateSize() {
+                    var left = header.offset().left;
+                    if(scope.fullWidth){
+                        left = header.position().left;
+                    }
+
                     clonedHeader.css({
                         top: scope.scrollStop,
                         width: header.outerWidth(),
-                        left: header.offset().left
+                        left: left
                     });
     
                     setColumnHeaderSizes();
