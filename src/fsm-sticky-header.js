@@ -12,6 +12,7 @@
                 scrollStop          : '=',
                 scrollableContainer : '=',
                 contentOffset       : '=',
+                leftOffset          : '=',
                 fullHeight          : '=',
                 fullWidth           : '='
             },
@@ -83,6 +84,10 @@
                     var left = header.offset().left;
                     if(scope.fullWidth){
                         left = header.position().left;
+                    }
+
+                    if(scope.leftOffset){
+                        left += parseInt(scope.leftOffset);
                     }
 
                     clonedHeader.css({
