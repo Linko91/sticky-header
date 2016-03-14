@@ -13,6 +13,7 @@
                 scrollableContainer : '=',
                 contentOffset       : '=',
                 leftOffset          : '=',
+                bindableHeader      : '=',
                 fullHeight          : '=',
                 fullWidth           : '='
             },
@@ -115,8 +116,10 @@
                     calculateSize();
                 };          
         
-                scrollableContainer.on('scroll.fsmStickyHeader', determineVisibility).trigger("scroll");
-                scrollableContainer.on('resize.fsmStickyHeader', determineVisibility);
+                if(scope.bindableHeader === undefined || scope.bindableHeader === true){
+                    scrollableContainer.on('scroll.fsmStickyHeader', determineVisibility).trigger("scroll");
+                    scrollableContainer.on('resize.fsmStickyHeader', determineVisibility);
+                }
 
                 scope.$on('$destroy', function() {
                     scrollableContainer.off('.fsmStickyHeader');
